@@ -17,16 +17,9 @@
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
     echo "This node is an engine..."
-    while true; do
-        curl -ss --silent -o /dev/null -k https://${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090/pa/heartbeat.ping
-        if ! test $? -eq 0 ; then
-            echo "Adding Engine: Server not started, waiting.."
-            sleep 3
-        else
-            echo "PA started, begin adding engine"
-            break
-        fi
-    done
+
+    # Wait until pingaccess admin is available
+    pingaccess_external_engine_wait
 
     # Retrieving CONFIG QUERY id
     OUT=$( make_api_request https://${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9000/pa-admin-api/v3/httpsListeners )
