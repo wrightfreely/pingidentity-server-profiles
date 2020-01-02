@@ -15,4 +15,4 @@ dsconfig create-recurring-task-chain \
   --set enabled:true \
   --set recurring-task:run-csd \
   --set scheduled-date-selection-type:every-day \
-  --set scheduled-time-of-day:*:00
+  --set scheduled-time-of-day:*:*0
