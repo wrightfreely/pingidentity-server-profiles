@@ -6,4 +6,4 @@ ${VERBOSE} && set -x
 
 echo "Hello from the baseline server profile 20-restart-sequence.sh.pre hook!"
 
-run_hook "84-download-artifact-s3.sh"
+run_hook "84-download-artifact-s3.sh" "s3://yfaruqi-pf-artifacts-bucket" "pf-apple-cloud-identity-connector" "1.0.1"
