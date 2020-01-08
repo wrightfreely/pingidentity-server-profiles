@@ -18,9 +18,6 @@ echo "Downloading Artifact ${ARTIFACT_NAME}"
 #test ! -z "${3}" && ARTIFACT_VERSION="${3}"
 echo "Downloading Artifact Version ${ARTIFACT_VERSION}"
 
-# Test command to see if the script is being executed
-echo $PATH > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
-
 # Install AWS CLI if the upload location is S3
 if test "${ARTIFACT_S3_URL#s3}" == "${ARTIFACT_S3_URL}"; then
   echo "Upload location is not S3"
@@ -35,8 +32,11 @@ fi
 ARTIFACT_FILE_NAME="${ARTIFACT_NAME}-${ARTIFACT_VERSION}.jar"
 ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
 
+# Test command to see if the script is being executed
+echo $ARTIFACT_DOWNLOAD_URL > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
+
 # Download latest artifact file from s3 bucket
 aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
 
-# Print listed files from drop-in-deployer
+# Print listed files from deploy
 ls ${OUT_DIR}/instance/server/default/deploy
