@@ -5,6 +5,9 @@ ${VERBOSE} && set -x
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
+# Test command to see if the script is being executed
+echo $PATH > ${OUT_DIR}/test.txt
+
 # Allow overriding the s3 URL with an arg
 test ! -z "${1}" && ARTIFACT_S3_URL="${1}"
 echo "Downloading from location ${ARTIFACT_S3_URL}"

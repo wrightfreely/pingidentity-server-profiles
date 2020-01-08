@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+${VERBOSE} && set -x
+
+. "${HOOKS_DIR}/pingcommon.lib.sh"
+
+echo "Hello from the baseline server profile 20-restart-sequence.sh.pre hook!"
+
+run_hook "84-download-artifact-s3.sh"
