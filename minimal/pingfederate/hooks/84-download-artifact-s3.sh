@@ -5,7 +5,7 @@ ${VERBOSE} && set -x
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
-ARTIFACT_S3_URL="s3://yfaruqi-pf-artifacts-bucket"
+ARTIFACT_S3_URL="s3://yfaruqi-artifact-test"
 ARTIFACT_NAME="pf-apple-idp-adapter"
 ARTIFACT_VERSION="1.0.1"
 
@@ -36,7 +36,6 @@ ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
 echo $ARTIFACT_DOWNLOAD_URL > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
 
 # Download latest artifact file from s3 bucket
-aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}"
 aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
 
 # Print listed files from deploy
