@@ -6,7 +6,7 @@ ${VERBOSE} && set -x
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
 ARTIFACT_S3_URL="s3://yfaruqi-pf-artifacts-bucket"
-ARTIFACT_NAME="pf-apple-cloud-identity-connector"
+ARTIFACT_NAME="pf-apple-idp-adapter"
 ARTIFACT_VERSION="1.0.1"
 
 #test ! -z "${1}" && ARTIFACT_S3_URL="${1}"
