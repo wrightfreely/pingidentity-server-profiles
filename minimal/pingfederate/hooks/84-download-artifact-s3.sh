@@ -9,7 +9,7 @@ ARTIFACT_S3_URL="s3://yfaruqi-artifact-test"
 ARTIFACT_NAME="IdpSample"
 ARTIFACT_VERSION="2.8.0"
 
-if test ! -z "${ARTIFACT_S3_URL}";l then
+if test ! -z "${ARTIFACT_S3_URL}"; then
   echo "Downloading from location ${ARTIFACT_S3_URL}"
 
   #test ! -z "${2}" && ARTIFACT_NAME="${2}"
