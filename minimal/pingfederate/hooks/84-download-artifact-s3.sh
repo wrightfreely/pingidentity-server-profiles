@@ -32,8 +32,12 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     pip3 install --no-cache-dir --upgrade jq
   fi
 
-  ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
-  aws s3 cp s3://yfaruqi-artifact-test "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war" --include "*.jar"
+  BUCKET_URL_NO_PROTOCOL=${ARTIFACT_S3_URL#s3://}
+  BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
+
+
+  #ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
+  #aws s3 cp s3://yfaruqi-artifact-test "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war" --include "*.jar"
 
   for row in $(echo "${ARTIFACT_LIST}" | jq -c '.[]'); do
     _artifact() {
@@ -45,13 +49,28 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     ARTIFACT_NAME=$(_artifact '.name')
     ARTIFACT_VERSION=$(_artifact '.version')
 
+    # Get list of files to deploy
+    DEPLOY_FILE_LIST=$( aws s3api list-objects \
+      --bucket "${BUCKET_NAME}" \
+      --prefix "${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" \
+      --query 'Contents[].{Key: Key}')
+
+    for deploy in $(echo "${DEPLOY_FILE_LIST}" | jq -c '.[]'); do
+        _deployfile() {
+          echo ${deploy} | jq -r ${1}
+        }
+
+        ARTIFACT_PATH=$(_deployfile '.key')
+        aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_PATH} ${OUT_DIR}/instance/server/default/deploy
+
+    done
     # Test command to see if the script is being executed
     #echo ${ARTIFACT_VERSION} > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
 
     #echo ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy > ${OUT_DIR}/artifactdeploy.txt
 
     # Download latest artifact file from s3 bucket
-    aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy ${OUT_DIR}/instance/server/default/deploy --recursive --include "*"
+    #aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy ${OUT_DIR}/instance/server/default/deploy --recursive --include "*"
     #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive
   done
 
