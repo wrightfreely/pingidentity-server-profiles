@@ -72,8 +72,8 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     # Download latest artifact file from s3 bucket
 
   ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
-  aws s3 cp ${ARTIFACT_DOWNLOAD_URL} "${OUT_DIR}/instance/server/default/deploy"
-    aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy ${OUT_DIR}/instance/server/default/deploy --recursive --include "*"
+  aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy"
+    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" "${OUT_DIR}/instance/server/default/deploy" --recursive
     aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive
   done
 
