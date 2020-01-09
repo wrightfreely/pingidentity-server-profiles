@@ -6,8 +6,8 @@ ${VERBOSE} && set -x
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
 ARTIFACT_S3_URL="s3://yfaruqi-artifact-test"
-ARTIFACT_NAME="pf-apple-idp-adapter"
-ARTIFACT_VERSION="1.0.1"
+ARTIFACT_NAME="IdpSample"
+ARTIFACT_VERSION="2.8.0"
 
 #test ! -z "${1}" && ARTIFACT_S3_URL="${1}"
 echo "Downloading from location ${ARTIFACT_S3_URL}"
@@ -29,7 +29,7 @@ elif ! which aws > /dev/null; then
   pip3 install --no-cache-dir --upgrade awscli
 fi
 
-ARTIFACT_FILE_NAME="${ARTIFACT_NAME}-${ARTIFACT_VERSION}.jar"
+ARTIFACT_FILE_NAME="${ARTIFACT_NAME}-${ARTIFACT_VERSION}.war"
 ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
 
 # Test command to see if the script is being executed
