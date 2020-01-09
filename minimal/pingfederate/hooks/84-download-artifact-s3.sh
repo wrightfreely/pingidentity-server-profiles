@@ -53,7 +53,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     DEPLOY_FILE_LIST=$( aws s3api list-objects \
       --bucket "${BUCKET_NAME}" \
       --prefix "${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" \
-      --query 'Contents[].{Key: Key}')
+      --query "Contents[].{Key: Key}")
 
     for deploy in $(echo "${DEPLOY_FILE_LIST}" | jq -c '.[]'); do
         _deployfile() {
