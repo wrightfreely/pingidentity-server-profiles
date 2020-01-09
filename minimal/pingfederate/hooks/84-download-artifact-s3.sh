@@ -32,7 +32,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     pip3 install --no-cache-dir --upgrade jq
   fi
 
-  for row in $(echo "${ARTIFACT_LIST}" | jq -r '.[]'); do
+  for row in $(echo "${ARTIFACT_LIST}" | jq -c '.[]'); do
     _artifact() {
       echo ${row} | jq -r ${1}
     }
