@@ -5,13 +5,6 @@ ${VERBOSE} && set -x
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
-#ARTIFACT_S3_URL="s3://yfaruqi-artifact-test"
-#ARTIFACT_NAME="IdpSample"
-#ARTIFACT_VERSION="2.8.0"
-
-# Test command to see if the script is being executed
-echo ${ARTIFACT_LIST} > ${OUT_DIR}/pretest${ARTIFACT_S3_URL}.txt
-
 if test ! -z "${ARTIFACT_S3_URL}"; then
 
 
@@ -39,19 +32,39 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     pip3 install --no-cache-dir --upgrade jq
   fi
 
+  for row in $(echo "${ARTIFACT_LIST}" | jq -r '.[]'); do
+    _artifact() {
+      echo ${row} | jq -r ${1}
+    }
+
+
+    echo $(_artifact '.name')  > ${OUT_DIR}/test${row}.txt
+    ARTIFACT_NAME=$(_artifact '.name')
+    ARTIFACT_VERSION=$(_artifact '.version')
+    ARTIFACT_TYPE=$(_artifact '.type')
+    ARTIFACT_FILE_NAME="${ARTIFACT_NAME}-${ARTIFACT_VERSION}.${ARTIFACT_TYPE}"
+    ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
+
+    # Test command to see if the script is being executed
+    echo ${ARTIFACT_VERSION} > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
+
+    # Download latest artifact file from s3 bucket
+    aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
+  done
+
   #Testing parsing json
   echo ${ARTIFACT_LIST} > ${OUT_DIR}/artifactList.json
-  ARTIFACT_NAME=$(jq -r .name ${OUT_DIR}/artifactList.json)
-  ARTIFACT_VERSION=$(jq -r .version ${OUT_DIR}/artifactList.json)
-  ARTIFACT_TYPE=$(jq -r .type ${OUT_DIR}/artifactList.json)
-  ARTIFACT_FILE_NAME="${ARTIFACT_NAME}-${ARTIFACT_VERSION}.${ARTIFACT_TYPE}"
-  ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
+  #ARTIFACT_NAME=$(jq -r .name ${OUT_DIR}/artifactList.json)
+  #ARTIFACT_VERSION=$(jq -r .version ${OUT_DIR}/artifactList.json)
+  #ARTIFACT_TYPE=$(jq -r .type ${OUT_DIR}/artifactList.json)
+  #ARTIFACT_FILE_NAME="${ARTIFACT_NAME}-${ARTIFACT_VERSION}.${ARTIFACT_TYPE}"
+  #ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
 
   # Test command to see if the script is being executed
-  echo ${ARTIFACT_VERSION} > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
+  #echo ${ARTIFACT_VERSION} > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
 
   # Download latest artifact file from s3 bucket
-  aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
+  #aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
 
   # Print listed files from deploy
   ls ${OUT_DIR}/instance/server/default/deploy
