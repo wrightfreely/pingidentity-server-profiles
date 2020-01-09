@@ -10,7 +10,7 @@ export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 #ARTIFACT_VERSION="2.8.0"
 
 # Test command to see if the script is being executed
-echo ${ARTIFACT_LIST} > ${OUT_DIR}/test${ARTIFACT_S3_URL}.txt
+echo ${ARTIFACT_LIST} > ${OUT_DIR}/pretest${ARTIFACT_S3_URL}.txt
 
 if test ! -z "${ARTIFACT_S3_URL}"; then
 
