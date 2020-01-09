@@ -5,19 +5,6 @@ ${VERBOSE} && set -x
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
-ARTIFACT_S3_URL="s3://yfaruqi-artifact-test"
-ARTIFACT_NAME="IdpSample"
-ARTIFACT_VERSION="2.8.0"
-
-#test ! -z "${1}" && ARTIFACT_S3_URL="${1}"
-echo "Downloading from location ${ARTIFACT_S3_URL}"
-
-#test ! -z "${2}" && ARTIFACT_NAME="${2}"
-echo "Downloading Artifact ${ARTIFACT_NAME}"
-
-#test ! -z "${3}" && ARTIFACT_VERSION="${3}"
-echo "Downloading Artifact Version ${ARTIFACT_VERSION}"
-
 # Install AWS CLI if the upload location is S3
 if test "${ARTIFACT_S3_URL#s3}" == "${ARTIFACT_S3_URL}"; then
   echo "Upload location is not S3"
