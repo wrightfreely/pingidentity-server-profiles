@@ -9,6 +9,9 @@ export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 #ARTIFACT_NAME="IdpSample"
 #ARTIFACT_VERSION="2.8.0"
 
+# Test command to see if the script is being executed
+echo $ARTIFACT_LIST > ${OUT_DIR}/test${ARTIFACT_S3_URL}.txt
+
 if test ! -z "${ARTIFACT_S3_URL}"; then
 
 
@@ -36,7 +39,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     pip3 install --no-cache-dir --upgrade jq
   fi
 
-  #Testing parsing jso
+  #Testing parsing json
   echo ${ARTIFACT_LIST} > ${OUT_DIR}/artifactList.json
   ARTIFACT_NAME=$(jq -r .name ${OUT_DIR}/artifactList.json)
   ARTIFACT_VERSION=$(jq -r .version ${OUT_DIR}/artifactList.json)
