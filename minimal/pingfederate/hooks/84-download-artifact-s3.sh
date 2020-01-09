@@ -48,7 +48,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
   ARTIFACT_DOWNLOAD_URL="${ARTIFACT_S3_URL}/${ARTIFACT_FILE_NAME}"
 
   # Test command to see if the script is being executed
-  echo $ARTIFACT_VERSION > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
+  echo ${ARTIFACT_VERSION} > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
 
   # Download latest artifact file from s3 bucket
   aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
