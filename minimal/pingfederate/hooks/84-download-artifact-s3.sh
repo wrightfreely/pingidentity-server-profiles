@@ -61,6 +61,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
         }
 
         ARTIFACT_PATH=$(_deployfile '.key')
+        echo ${ARTIFACT_PATH} > ${OUT_DIR}/artifactpath.txt
         aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_PATH} ${OUT_DIR}/instance/server/default/deploy
 
     done
