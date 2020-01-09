@@ -52,7 +52,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     echo ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy > ${OUT_DIR}/artifactdeploy.txt
 
     # Download latest artifact file from s3 bucket
-    aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
+    #aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy/${ARTIFACT_FILE_NAME}"
     aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" "${OUT_DIR}/instance/server/default/deploy" --recursive
     aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template" "${OUT_DIR}/instance/server/default/conf/template" --recursive
   done
