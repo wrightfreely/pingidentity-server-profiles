@@ -46,35 +46,35 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     ARTIFACT_NAME=$(_artifact '.name')
     ARTIFACT_VERSION=$(_artifact '.version')
 
-  ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
-  aws s3 cp ${ARTIFACT_DOWNLOAD_URL} "${OUT_DIR}/instance/server/default/deploy"
-
     # Get list of files to deploy
-    DEPLOY_FILE_LIST=$( aws s3api list-objects \
-      --bucket "${BUCKET_NAME}" \
-      --prefix "${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" \
-      --query "Contents[].{Key: Key}" --output=text )
+    #DEPLOY_FILE_LIST=$( aws s3api list-objects \
+    #  --bucket "${BUCKET_NAME}" \
+    #  --prefix "${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" \
+    #  --query "Contents[].{Key: Key}" --output=text )
 
-    echo ${DEPLOY_FILE_LIST} > ${OUT_DIR}/deployfile.txt
+    #echo ${DEPLOY_FILE_LIST} > ${OUT_DIR}/deployfile.txt
 
-    for deploy in $(echo "${DEPLOY_FILE_LIST}" | jq -c '.[]'); do
-        _deployfile() {
-          echo ${deploy} | jq -r ${1}
-        }
+    #for deploy in $(echo "${DEPLOY_FILE_LIST}" | jq -c '.[]'); do
+    #    _deployfile() {
+    #      echo ${deploy} | jq -r ${1}
+    #    }
 
-        ARTIFACT_PATH=$(_deployfile '.key')
-        echo ${ARTIFACT_PATH} > ${OUT_DIR}/artifactpath.txt
-        aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_PATH} ${OUT_DIR}/instance/server/default/deploy
+    #    ARTIFACT_PATH=$(_deployfile '.key')
+    #    echo ${ARTIFACT_PATH} > ${OUT_DIR}/artifactpath.txt
+    #    aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_PATH} ${OUT_DIR}/instance/server/default/deploy
 
-    done
+    #done
     # Test command to see if the script is being executed
     #echo ${ARTIFACT_VERSION} > ${OUT_DIR}/test${ARTIFACT_NAME}.txt
 
     #echo ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy > ${OUT_DIR}/artifactdeploy.txt
 
     # Download latest artifact file from s3 bucket
-    #aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy ${OUT_DIR}/instance/server/default/deploy --recursive --include "*"
-    #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive
+
+  ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
+  aws s3 cp ${ARTIFACT_DOWNLOAD_URL} "${OUT_DIR}/instance/server/default/deploy"
+    aws s3 cp ${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy ${OUT_DIR}/instance/server/default/deploy --recursive --include "*"
+    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive
   done
 
   #Testing parsing json
