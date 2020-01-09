@@ -35,6 +35,8 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
   BUCKET_URL_NO_PROTOCOL=${ARTIFACT_S3_URL#s3://}
   BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
 
+  echo ${BUCKET_NAME} > ${OUT_DIR}/bucketname.txt
+
 
   #ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
   #aws s3 cp s3://yfaruqi-artifact-test "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war" --include "*.jar"
