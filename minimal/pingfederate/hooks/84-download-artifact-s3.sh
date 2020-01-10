@@ -75,7 +75,8 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
   #aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy"
   ALL_FILES = $( aws s3 ls ${ARTIFACT_S3_URL} )
   echo ${ALL_FILES} > ${OUT_DIR}/list.txt
-    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" "${OUT_DIR}/instance/server/default/deploy" --recursive --include "*" > ${OUT_DIR}/error1.txt
+    #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy" "${OUT_DIR}/instance/server/default/deploy" --recursive --include "*" > ${OUT_DIR}/error1.txt
+    aws s3 cp "s3://yfaruqi-artifact-test/pf-apple-cloud-identity-connector/1.0.1/deploy" "${OUT_DIR}/instance/server/default/deploy" --recursive --include "*" > ${OUT_DIR}/error1.txt
     #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive > ${OUT_DIR}/error2.log
   done
 
