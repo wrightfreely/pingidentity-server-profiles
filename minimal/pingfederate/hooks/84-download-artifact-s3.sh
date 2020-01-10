@@ -33,8 +33,8 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     ARTIFACT_NAME=$(_artifact '.name')
     ARTIFACT_VERSION=$(_artifact '.version')
 
-    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive
-    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/conf/" "${OUT_DIR}/instance/server/default/conf" --recursive
+    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive --debug 2> ${OUT_DIR}/error1.txt
+    aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/conf/" "${OUT_DIR}/instance/server/default/conf" --recursive --debug 2> ${OUT_DIR}/error2.txt
   done
 
   # Print listed files from deploy
