@@ -73,13 +73,13 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
 
   #ALL_FILES=$( aws s3 ls ${ARTIFACT_S3_URL} --recursive )
   #echo ${ALL_FILES} > ${OUT_DIR}/list.txt
-  aws s3 cp "s3://yfaruqi-artifact-test/pf-rsa-securid-integration-kit/3.0.1/deploy/" "${OUT_DIR}/instance/server/default/deploy" > ${OUT_DIR}/error.txt
+  aws s3 cp "s3://yfaruqi-artifact-test" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war"
     #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.jar" --include "*.war"
     #aws s3 cp "s3://yfaruqi-artifact-test/pf-apple-cloud-identity-connector/1.0.1/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.jar" --include "*.war"
     #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive > ${OUT_DIR}/error2.log
 
-  ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
-  aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy"
+  #ARTIFACT_DOWNLOAD_URL="s3://yfaruqi-artifact-test/IdpSample-2.8.0.war"
+  #aws s3 cp "${ARTIFACT_DOWNLOAD_URL}" "${OUT_DIR}/instance/server/default/deploy"
 
   done
 
