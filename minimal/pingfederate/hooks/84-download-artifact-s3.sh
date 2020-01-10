@@ -32,7 +32,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     pip3 install --no-cache-dir --upgrade jq
   fi
 
-aws s3 cp "s3://yfaruqi-artifact-test" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war"
+aws s3 cp "s3://yfaruqi-artifact-test" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war" 2> ${OUT_DIR}/error.txt
 
   BUCKET_URL_NO_PROTOCOL=${ARTIFACT_S3_URL#s3://}
   BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
