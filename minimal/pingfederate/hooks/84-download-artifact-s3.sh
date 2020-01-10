@@ -32,6 +32,8 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
     pip3 install --no-cache-dir --upgrade jq
   fi
 
+aws s3 cp "s3://yfaruqi-artifact-test" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war"
+
   BUCKET_URL_NO_PROTOCOL=${ARTIFACT_S3_URL#s3://}
   BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
 
@@ -73,7 +75,7 @@ if test ! -z "${ARTIFACT_S3_URL}"; then
 
   #ALL_FILES=$( aws s3 ls ${ARTIFACT_S3_URL} --recursive )
   #echo ${ALL_FILES} > ${OUT_DIR}/list.txt
-  aws s3 cp "s3://yfaruqi-artifact-test" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war"
+  #aws s3 cp "s3://yfaruqi-artifact-test" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.war"
     #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.jar" --include "*.war"
     #aws s3 cp "s3://yfaruqi-artifact-test/pf-apple-cloud-identity-connector/1.0.1/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive --exclude "*" --include "*.jar" --include "*.war"
     #aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/template/" "${OUT_DIR}/instance/server/default/conf/template" --recursive > ${OUT_DIR}/error2.log
