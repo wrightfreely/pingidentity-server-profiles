@@ -9,12 +9,12 @@ export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 if test ! -z "${ARTIFACT_LIST}"; then
 
   # Check to see if the source S3 bucket is specified
-  if test ! -z "${ARTIFACT_LIST}"; then
+  if test ! -z "${ARTIFACT_REPO_URL}"; then
 
-    echo "Downloading from location ${ARTIFACT_S3_URL}"
+    echo "Downloading from location ${ARTIFACT_REPO_URL}"
 
     # Install AWS CLI if the upload location is S3
-    if test "${ARTIFACT_S3_URL#s3}" == "${ARTIFACT_S3_URL}"; then
+    if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
       echo "Upload location is not S3"
       exit 0
     elif ! which aws > /dev/null; then
@@ -29,6 +29,14 @@ if test ! -z "${ARTIFACT_LIST}"; then
       pip3 install --no-cache-dir --upgrade jq
     fi
 
+    DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
+
+    if test "${ARTIFACT_REPO_URL}" == */pingfederate; then
+      TARGET_BASE_URL="${ARTIFACT_REPO_URL}"
+    else
+      TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
+    fi
+
     for artifact in $(echo "${ARTIFACT_LIST}" | jq -c '.[]'); do
       _artifact() {
         echo ${artifact} | jq -r ${1}
@@ -37,8 +45,8 @@ if test ! -z "${ARTIFACT_LIST}"; then
       ARTIFACT_NAME=$(_artifact '.name')
       ARTIFACT_VERSION=$(_artifact '.version')
 
-      aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive
-      aws s3 cp "${ARTIFACT_S3_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/conf/" "${OUT_DIR}/instance/server/default/conf" --recursive
+      aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/deploy/" "${OUT_DIR}/instance/server/default/deploy" --recursive
+      aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/conf/" "${OUT_DIR}/instance/server/default/conf" --recursive
     done
 
     # Print listed files from deploy
