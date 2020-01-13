@@ -29,12 +29,10 @@ if test ! -z "${ARTIFACT_LIST}"; then
       pip3 install --no-cache-dir --upgrade jq
     fi
 
-    DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
-
     if test "${ARTIFACT_REPO_URL}" == */pingfederate; then
       TARGET_BASE_URL="${ARTIFACT_REPO_URL}"
     else
-      TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
+      TARGET_BASE_URL="${ARTIFACT_REPO_URL}/pingfederate"
     fi
 
     for artifact in $(echo "${ARTIFACT_LIST}" | jq -c '.[]'); do
