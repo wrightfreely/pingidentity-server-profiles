@@ -38,10 +38,10 @@ if test ! -z "${PF_ARTIFACT_LIST}"; then
     fi
 
     # Extract prefix if present
-    if test "${PF_ARTIFACT_LIST#JSON=}" == "${PF_ARTIFACT_LIST}"; then
+    if test "${PF_ARTIFACT_LIST#JSON:}" == "${PF_ARTIFACT_LIST}"; then
       ARTIFACT_LIST_JSON="${PF_ARTIFACT_LIST}"
     else
-      ARTIFACT_LIST_JSON=${PF_ARTIFACT_LIST/JSON=/}
+      ARTIFACT_LIST_JSON=${PF_ARTIFACT_LIST/JSON:/}
     fi
 
     for artifact in $(echo "${ARTIFACT_LIST_JSON}" | jq -c '.[]'); do
