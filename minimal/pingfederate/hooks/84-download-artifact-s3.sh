@@ -36,10 +36,10 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         pip3 install --no-cache-dir --upgrade unzip
       fi
 
-      if ! which wget > /dev/null; then
-        echo "Installing wget"
-        pip3 install --no-cache-dir --upgrade wget
-      fi
+      #if ! which wget > /dev/null; then
+      #  echo "Installing wget"
+      #  pip3 install --no-cache-dir --upgrade wget
+      #fi
 
       DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
@@ -60,14 +60,14 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         CURRENT_DIRECTORY=$(pwd)
 
         # Download artifact zip
-        #curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
-        cd /tmp
-        wget "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip"
+        curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+        #cd /tmp
+        #wget "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip"
 
         #if test $(echo $?) == "0"; then
         if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
         then
-          if unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default
+          if unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/${ARTIFACT_NAME}.txt
           then
             rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
           fi
