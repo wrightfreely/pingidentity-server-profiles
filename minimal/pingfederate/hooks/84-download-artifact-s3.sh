@@ -56,8 +56,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         # Download artifact zip
         curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
 
-        if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
-        then
+        if test $(echo $?) == "0"; then
           CURRENT_DIRECTORY=$(pwd)
           cd "${OUT_DIR}/instance/server/default"
           unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
