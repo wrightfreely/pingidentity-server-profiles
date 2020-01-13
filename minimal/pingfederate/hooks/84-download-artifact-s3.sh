@@ -43,7 +43,7 @@ if test ! -z "${PF_ARTIFACT_LIST}"; then
     if test "${PF_ARTIFACT_LIST#LIST:}" == "${PF_ARTIFACT_LIST}"; then
       ARTIFACT_LIST_JSON="${PF_ARTIFACT_LIST}"
     else
-      ARTIFACT_LIST_JSON=$(echo ${PF_ARTIFACT_LIST/LIST:/})
+      ARTIFACT_LIST_JSON=${PF_ARTIFACT_LIST/LIST:/}
     fi
 
     echo ${ARTIFACT_LIST_JSON} > ${OUT_DIR}/artifactListJSON.txt
