@@ -5,8 +5,6 @@ ${VERBOSE} && set -x
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
-echo ${ARTIFACT_REPO_URL} > ${OUT_DIR}/artifact-repo-url.txt
-
 # Check to see if an artifact list is available
 if test ! -z "${ARTIFACT_LIST}"; then
 
@@ -38,8 +36,6 @@ if test ! -z "${ARTIFACT_LIST}"; then
     else
       TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
     fi
-
-    echo ${TARGET_BASE_URL} > ${OUT_DIR}/base.txt
 
     for artifact in $(echo "${ARTIFACT_LIST}" | jq -c '.[]'); do
       _artifact() {
