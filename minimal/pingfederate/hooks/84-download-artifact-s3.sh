@@ -16,15 +16,15 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
       echo "Downloading from location ${ARTIFACT_REPO_URL}"
 
       # Install AWS CLI if the upload location is S3
-      if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
-        echo "Upload location is not S3"
-        exit 0
-      elif ! which aws > /dev/null; then
-        echo "Installing AWS CLI"
-        apk --update add python3
-        pip3 install --no-cache-dir --upgrade pip
-        pip3 install --no-cache-dir --upgrade awscli
-      fi
+      #if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
+      #  echo "Upload location is not S3"
+      #  exit 0
+      #elif ! which aws > /dev/null; then
+      #  echo "Installing AWS CLI"
+      #  apk --update add python3
+      #  pip3 install --no-cache-dir --upgrade pip
+      #  pip3 install --no-cache-dir --upgrade awscli
+      #fi
 
       if ! which jq > /dev/null; then
         echo "Installing jq"
@@ -47,10 +47,23 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         ARTIFACT_NAME=$(_artifact '.name')
         ARTIFACT_VERSION=$(_artifact '.version')
 
-        if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
+
+        # Download artifact zip
+        curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+
+        if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
         then
-          aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/" "${OUT_DIR}/instance/server/default" --recursive
+          CURRENT_DIRECTORY=$(pwd)
+          cd "${OUT_DIR}/instance/server/default"
+          unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip"
+          rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+          cd ${CURRENT_DIRECTORY}
         fi
+
+        #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
+        #then
+        #  aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/" "${OUT_DIR}/instance/server/default" --recursive
+        #fi
 
       done
 
