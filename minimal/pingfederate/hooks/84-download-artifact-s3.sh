@@ -40,10 +40,10 @@ if test ! -z "${PF_ARTIFACT_LIST}"; then
       TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
     fi
 
-    if test "${PF_ARTIFACT_LIST#LIST:}" == "${PF_ARTIFACT_LIST}"; then
+    if test "${PF_ARTIFACT_LIST#JSON=}" == "${PF_ARTIFACT_LIST}"; then
       ARTIFACT_LIST_JSON="${PF_ARTIFACT_LIST}"
     else
-      ARTIFACT_LIST_JSON=${PF_ARTIFACT_LIST/LIST:/}
+      ARTIFACT_LIST_JSON=${PF_ARTIFACT_LIST/JSON=/}
     fi
 
     echo ${ARTIFACT_LIST_JSON} > ${OUT_DIR}/artifactListJSON.txt
