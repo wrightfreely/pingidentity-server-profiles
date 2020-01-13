@@ -6,7 +6,7 @@ ${VERBOSE} && set -x
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
 # Check to see if an artifact list is available
-if test ! -z "${ARTIFACT_LIST}"; then
+if test ! -z "${PF_ARTIFACT_LIST}"; then
 
   # Check to see if the source S3 bucket is specified
   if test ! -z "${ARTIFACT_REPO_URL}"; then
@@ -37,7 +37,7 @@ if test ! -z "${ARTIFACT_LIST}"; then
       TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
     fi
 
-    for artifact in $(echo "${ARTIFACT_LIST}" | jq -c '.[]'); do
+    for artifact in $(echo "${PF_ARTIFACT_LIST}" | jq -c '.[]'); do
       _artifact() {
         echo ${artifact} | jq -r ${1}
       }
