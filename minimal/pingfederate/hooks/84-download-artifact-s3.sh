@@ -57,11 +57,6 @@ if test ! -z "${PF_ARTIFACT_LIST}"; then
         aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/" "${OUT_DIR}/instance/server/default" --recursive
       fi
 
-      #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/conf)" ]
-      #then
-      #  aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/conf/" "${OUT_DIR}/instance/server/default/conf" --recursive
-      #fi
-
     done
 
     # Print listed files from deploy
