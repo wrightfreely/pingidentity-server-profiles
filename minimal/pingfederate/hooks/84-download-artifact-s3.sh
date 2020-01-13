@@ -5,9 +5,6 @@ ${VERBOSE} && set -x
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
 export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
-echo ${PF_ARTIFACT_LIST} > ${OUT_DIR}/artifactList.txt
-echo ${ARTIFACT_REPO_URL} > ${OUT_DIR}/artifactRepo.txt
-
 # Check to see if an artifact list is available
 if test ! -z "${PF_ARTIFACT_LIST}"; then
 
@@ -40,13 +37,13 @@ if test ! -z "${PF_ARTIFACT_LIST}"; then
       TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
     fi
 
+    # Extract prefix if present
     if test "${PF_ARTIFACT_LIST#JSON=}" == "${PF_ARTIFACT_LIST}"; then
       ARTIFACT_LIST_JSON="${PF_ARTIFACT_LIST}"
     else
       ARTIFACT_LIST_JSON=${PF_ARTIFACT_LIST/JSON=/}
     fi
 
-    echo ${ARTIFACT_LIST_JSON} > ${OUT_DIR}/artifactListJSON.txt
     for artifact in $(echo "${ARTIFACT_LIST_JSON}" | jq -c '.[]'); do
       _artifact() {
         echo ${artifact} | jq -r ${1}
