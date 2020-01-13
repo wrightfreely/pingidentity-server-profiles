@@ -36,6 +36,11 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         pip3 install --no-cache-dir --upgrade unzip
       fi
 
+      if ! which wget > /dev/null; then
+        echo "Installing wget"
+        pip3 install --no-cache-dir --upgrade wget
+      fi
+
       DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
       if [ -z "${ARTIFACT_REPO_URL##*/pingfederate*}" ] ; then
@@ -52,12 +57,15 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         ARTIFACT_NAME=$(_artifact '.name')
         ARTIFACT_VERSION=$(_artifact '.version')
 
+        CURRENT_DIRECTORY=$(pwd)
 
         # Download artifact zip
-        curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+        #curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+        cd /tmp
+        wget "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip"
 
-        if test $(echo $?) == "0"; then
-          CURRENT_DIRECTORY=$(pwd)
+        #if test $(echo $?) == "0"; then
+        if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
           cd "${OUT_DIR}/instance/server/default"
           unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
           rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
