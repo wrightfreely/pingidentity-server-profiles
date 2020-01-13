@@ -66,6 +66,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         #if test $(echo $?) == "0"; then
         if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
+        then
           cd "${OUT_DIR}/instance/server/default"
           unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
           rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
