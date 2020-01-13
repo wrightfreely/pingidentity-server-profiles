@@ -31,6 +31,11 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         pip3 install --no-cache-dir --upgrade jq
       fi
 
+      if ! which unzip > /dev/null; then
+        echo "Installing unzip"
+        pip3 install --no-cache-dir --upgrade unzip
+      fi
+
       DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
       if [ -z "${ARTIFACT_REPO_URL##*/pingfederate*}" ] ; then
@@ -49,13 +54,13 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
 
         # Download artifact zip
-        curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip 2> ${OUT_DIR}/error.txt
+        curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
 
         if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
         then
           CURRENT_DIRECTORY=$(pwd)
           cd "${OUT_DIR}/instance/server/default"
-          unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip"
+          unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
           rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
           cd ${CURRENT_DIRECTORY}
         fi
