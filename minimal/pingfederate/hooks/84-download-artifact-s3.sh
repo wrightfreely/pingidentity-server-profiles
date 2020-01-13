@@ -40,7 +40,14 @@ if test ! -z "${PF_ARTIFACT_LIST}"; then
       TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
     fi
 
-    for artifact in $(echo "${PF_ARTIFACT_LIST}" | jq -c '.[]'); do
+    if test "${PF_ARTIFACT_LIST#LIST:}" == "${PF_ARTIFACT_LIST}"; then
+      ARTIFACT_LIST_JSON="${PF_ARTIFACT_LIST}"
+    else
+      ARTIFACT_LIST_JSON=$(echo ${PF_ARTIFACT_LIST} | cut -d':' -f 2)
+    fi
+
+    echo ${ARTIFACT_LIST_JSON} > ${OUT_DIR}/artifactListJSON.txt
+    for artifact in $(echo "${ARTIFACT_LIST_JSON}" | jq -c '.[]'); do
       _artifact() {
         echo ${artifact} | jq -r ${1}
       }
