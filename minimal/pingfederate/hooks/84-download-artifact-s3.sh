@@ -67,10 +67,14 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         #if test $(echo $?) == "0"; then
         if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
         then
-          cd "${OUT_DIR}/instance/server/default"
-          unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
-          rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
-          cd ${CURRENT_DIRECTORY}
+          if unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default
+          then
+            rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+          fi
+          #cd "${OUT_DIR}/instance/server/default"
+          #unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
+          #rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+          #cd ${CURRENT_DIRECTORY}
         fi
 
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
