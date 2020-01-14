@@ -33,17 +33,6 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         pip3 install --no-cache-dir --upgrade awscli
       fi
 
-      # Install AWS CLI if the upload location is S3
-      #if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
-      #  echo "Upload location is not S3"
-      #  exit 0
-      #elif ! which aws > /dev/null; then
-      #  echo "Installing AWS CLI"
-      #  apk --update add python3
-      #  pip3 install --no-cache-dir --upgrade pip
-      #  pip3 install --no-cache-dir --upgrade awscli
-      #fi
-
       DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
       if [ -z "${ARTIFACT_REPO_URL##*/pingfederate*}" ] ; then
@@ -60,8 +49,9 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         ARTIFACT_NAME=$(_artifact '.name')
         ARTIFACT_VERSION=$(_artifact '.version')
 
-        CURRENT_DIRECTORY=$(pwd)
+        #CURRENT_DIRECTORY=$(pwd)
 
+        # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
         if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
           aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" /tmp 2> ${OUT_DIR}/aws-error-${ARTIFACT_NAME}.txt
         else
