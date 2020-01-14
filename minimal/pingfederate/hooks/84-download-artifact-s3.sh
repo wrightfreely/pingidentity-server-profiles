@@ -59,7 +59,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         fi
 
         if test $(echo $?) == "0"; then
-          unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
+          unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}-runtime.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
         fi
 
         #Cleanup
