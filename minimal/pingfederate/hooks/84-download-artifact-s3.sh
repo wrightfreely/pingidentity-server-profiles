@@ -56,7 +56,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
           aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}" /tmp 2> ${OUT_DIR}/aws-error-${ARTIFACT_NAME}.txt
         else
-          curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_RUNTIME_ZIP}" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip 2> ${OUT_DIR}/curl-error-${ARTIFACT_NAME}.txt
+          curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_RUNTIME_ZIP}" --output /tmp/${ARTIFACT_RUNTIME_ZIP} 2> ${OUT_DIR}/curl-error-${ARTIFACT_NAME}.txt
         fi
 
         if test $(echo $?) == "0"; then
@@ -64,7 +64,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         fi
 
         #Cleanup
-        #rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+        rm /tmp/${ARTIFACT_RUNTIME_ZIP}
 
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
