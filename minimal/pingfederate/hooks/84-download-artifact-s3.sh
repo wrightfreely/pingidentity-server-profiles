@@ -52,6 +52,8 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         #CURRENT_DIRECTORY=$(pwd)
 
+        echo ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_RUNTIME_ZIP} > ${OUT_DIR}/artifacturl.txt
+
         # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
         if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
           aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}" /tmp 2> ${OUT_DIR}/aws-error-${ARTIFACT_NAME}.txt
