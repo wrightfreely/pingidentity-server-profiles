@@ -64,7 +64,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         fi
 
         #Cleanup
-        rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+        #rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
 
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
