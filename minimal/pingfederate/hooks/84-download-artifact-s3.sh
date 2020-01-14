@@ -64,6 +64,8 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
         fi
 
+        curl "https://yfaruqi-pf-artifacts-bucket.s3.amazonaws.com/pf-apple-idp-adapter-1.0.1.jar" --output /tmp/artifact.zip
+
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
         #  aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/" "${OUT_DIR}/instance/server/default" --recursive
