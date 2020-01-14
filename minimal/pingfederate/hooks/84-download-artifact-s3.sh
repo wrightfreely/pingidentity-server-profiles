@@ -62,6 +62,9 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
         fi
 
+        #Cleanup
+        rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
         #  aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/" "${OUT_DIR}/instance/server/default" --recursive
