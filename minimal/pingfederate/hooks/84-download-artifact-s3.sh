@@ -15,17 +15,6 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
       echo "Downloading from location ${ARTIFACT_REPO_URL}"
 
-      # Install AWS CLI if the upload location is S3
-      if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
-        echo "Upload location is not S3"
-        exit 0
-      elif ! which aws > /dev/null; then
-        echo "Installing AWS CLI"
-        apk --update add python3
-        pip3 install --no-cache-dir --upgrade pip
-        pip3 install --no-cache-dir --upgrade awscli
-      fi
-
       if ! which jq > /dev/null; then
         echo "Installing jq"
         pip3 install --no-cache-dir --upgrade jq
@@ -36,9 +25,23 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         pip3 install --no-cache-dir --upgrade unzip
       fi
 
-      #if ! which wget > /dev/null; then
-      #  echo "Installing wget"
-      #  pip3 install --no-cache-dir --upgrade wget
+      # Install AWS CLI if the upload location is S3
+      if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
+        echo "Installing AWS CLI"
+        apk --update add python3
+        pip3 install --no-cache-dir --upgrade pip
+        pip3 install --no-cache-dir --upgrade awscli
+      fi
+
+      # Install AWS CLI if the upload location is S3
+      #if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
+      #  echo "Upload location is not S3"
+      #  exit 0
+      #elif ! which aws > /dev/null; then
+      #  echo "Installing AWS CLI"
+      #  apk --update add python3
+      #  pip3 install --no-cache-dir --upgrade pip
+      #  pip3 install --no-cache-dir --upgrade awscli
       #fi
 
       DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
@@ -59,12 +62,15 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         CURRENT_DIRECTORY=$(pwd)
 
-        aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" /tmp 2> ${OUT_DIR}/aws-error-${ARTIFACT_NAME}.txt
+        if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
+          aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" /tmp 2> ${OUT_DIR}/aws-error-${ARTIFACT_NAME}.txt
+        else
+          curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip 2> ${OUT_DIR}/curl-error-${ARTIFACT_NAME}.txt
+        fi
+
         if test $(echo $?) == "0"; then
           unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
         fi
-
-        curl "https://yfaruqi-pf-artifacts-bucket.s3.amazonaws.com/pf-apple-idp-adapter-1.0.1.jar" --output /tmp/artifact.zip
 
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
