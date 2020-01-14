@@ -16,15 +16,15 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
       echo "Downloading from location ${ARTIFACT_REPO_URL}"
 
       # Install AWS CLI if the upload location is S3
-      #if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
-      #  echo "Upload location is not S3"
-      #  exit 0
-      #elif ! which aws > /dev/null; then
-      #  echo "Installing AWS CLI"
-      #  apk --update add python3
-      #  pip3 install --no-cache-dir --upgrade pip
-      #  pip3 install --no-cache-dir --upgrade awscli
-      #fi
+      if test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
+        echo "Upload location is not S3"
+        exit 0
+      elif ! which aws > /dev/null; then
+        echo "Installing AWS CLI"
+        apk --update add python3
+        pip3 install --no-cache-dir --upgrade pip
+        pip3 install --no-cache-dir --upgrade awscli
+      fi
 
       if ! which jq > /dev/null; then
         echo "Installing jq"
@@ -59,24 +59,34 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         CURRENT_DIRECTORY=$(pwd)
 
+        aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" /tmp 2> ${OUT_DIR}/aws-error-${ARTIFACT_NAME}.txt
+        if test $(echo $?) == "0"; then
+          unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
+        fi
+
+        #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
+        #then
+        #  aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/" "${OUT_DIR}/instance/server/default" --recursive
+        #fi
+
         # Download artifact zip
-        curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
+        #curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" --output /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
         #cd /tmp
         #wget "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip"
 
         #if test $(echo $?) == "0"; then
-        if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
-        then
+        #if [ -f "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" ]
+        #then
           #if unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/${ARTIFACT_NAME}.txt
           #then
           #  rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
           #fi
-          unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/${ARTIFACT_NAME}.txt
+          #unzip -o /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/${ARTIFACT_NAME}.txt
           #cd "${OUT_DIR}/instance/server/default"
           #unzip "/tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip" 2> ${OUT_DIR}/error.txt
           #rm /tmp/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.zip
           #cd ${CURRENT_DIRECTORY}
-        fi
+        #fi
 
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
