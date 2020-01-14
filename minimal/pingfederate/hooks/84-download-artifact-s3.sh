@@ -52,7 +52,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         #CURRENT_DIRECTORY=$(pwd)
 
-        echo "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_RUNTIME_ZIP}" > ${OUT_DIR}/artifacturl.txt
+        echo "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})/${ARTIFACT_RUNTIME_ZIP}" > ${OUT_DIR}/${ARTIFACT_VERSION}-url.txt
 
         # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
         if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
@@ -61,12 +61,12 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}" --output /tmp/${ARTIFACT_RUNTIME_ZIP} 2> ${OUT_DIR}/curl-error-${ARTIFACT_NAME}.txt
         fi
 
-        #if test $(echo $?) == "0"; then
+        if test $(echo $?) == "0"; then
           unzip -o /tmp/${ARTIFACT_RUNTIME_ZIP} -d ${OUT_DIR}/instance/server/default 2> ${OUT_DIR}/unzip-error-${ARTIFACT_NAME}.txt
-        #fi
+        fi
 
         #Cleanup
-        #rm /tmp/${ARTIFACT_RUNTIME_ZIP}
+        rm /tmp/${ARTIFACT_RUNTIME_ZIP}
 
         #if [ ! -z "$(aws s3 ls ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION})" ]
         #then
