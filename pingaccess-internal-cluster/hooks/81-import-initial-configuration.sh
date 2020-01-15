@@ -44,11 +44,18 @@ curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: 
   https://localhost:9000/pa-admin-api/v3/config/import
 
 # Update admin config host
-make_api_request -X PUT -d "{
-                            \"hostPort\":\"'"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_INTERNAL_ADMIN}"':9090\",
-                            \"httpProxyId\": 0,
-                            \"httpsProxyId\": 0
-                        }" https://localhost:9000/pa-admin-api/v3/adminConfig
+#make_api_request -X PUT -d "{
+#                            \"hostPort\":\"'"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_INTERNAL_ADMIN}"':9090\",
+#                            \"httpProxyId\": 0,
+#                            \"httpsProxyId\": 0
+#                        }" https://localhost:9000/pa-admin-api/v3/adminConfig
+
+echo "testing without the function"
+curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d '{
+  "hostPort":"'"${K8S_STATEFUL_SET_NAME_PINGACCESS_INTERNAL}"':9090",
+  "httpProxyId": 0,
+  "httpsProxyId": 0
+}' https://localhost:9000/pa-admin-api/v3/adminConfig
 
 echo "apps after import"
 curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
