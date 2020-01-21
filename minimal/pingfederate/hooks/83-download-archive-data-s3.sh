@@ -64,7 +64,6 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
   unzip "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}" \
       pf.jwk \
       -d "${OUT_DIR}/instance/server/default/data"
-  echo "ray ------------------>\n$(ls ${OUT_DIR}/instance/server/default/data/)\n<----------------ray"
 
   # Print the filename of the downloaded file from s3
   echo "Download file name: ${DATA_BACKUP_FILE}"
