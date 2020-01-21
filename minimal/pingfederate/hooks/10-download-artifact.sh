@@ -69,7 +69,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           if test "${ARTIFACT_NAME_COUNT}" == "1"; then
 
             # Get artifact source location
-            if test "${ARTIFACT_VERSION}" == "private"; then
+            if test "${ARTIFACT_SOURCE}" == "private"; then
               ARTIFACT_LOCATION=${PRIVATE_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
             else
               ARTIFACT_LOCATION=${PUBLIC_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
