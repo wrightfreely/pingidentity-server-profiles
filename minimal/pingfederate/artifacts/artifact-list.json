@@ -1,70 +1,87 @@
 [
   {
     "name": "pf-invalid-kit",
-    "version": "9.9.9"
+    "version": "9.9.9",
+    "source": "private"
   },
   {
     "name": "pf-aws-connector",
-    "version": "2.0"
+    "version": "2.0",
+    "source": "private"
   },
   {
     "name": "coreblox-integration-kit",
-    "version": "2.6.1"
+    "version": "2.6.1",
+    "source": "private"
   },
   {
     "name": "pf-duo-security-integration-kit",
-    "version": "2.2.1"
+    "version": "2.2.1",
+    "source": "private"
   },
   {
     "name": "pf-x509-certificate-integration-kit",
-    "version": "1.2.1"
+    "version": "1.2.1",
+    "source": "private"
   },
   {
     "name": "pf-vip-integration-kit",
-    "version": "1.4.0"
+    "version": "1.4.0",
+    "source": "private"
   },
   {
     "name": "pf-p14c-integration-kit",
-    "version": "1.2.1"
+    "version": "1.2.1",
+    "source": "private"
   },
   {
     "name": "pf-google-cloud-identity-connector",
-    "version": "1.4.1"
+    "version": "1.4.1",
+    "source": "private"
   },
   {
     "name": "pf-github-cloud-identity-connector",
-    "version": "1.0"
+    "version": "1.0",
+    "source": "private"
   },
   {
     "name": "pf-atlassian-integration-kit",
-    "version": "2.1"
+    "version": "2.1",
+    "source": "private"
   },
   {
     "name": "pf-amazon-cloud-identity-connector",
-    "version": "1.0"
+    "version": "1.0",
+    "source": "private"
   },
   {
     "name": "pf-airwatch-adapter",
-    "version": "1.0.2"
+    "version": "1.0.2",
+    "source": "private"
   },
   {
     "name": "mobileiron-ik",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "source": "private"
   },
   {
     "name": "pf-rsa-securid-integration-kit",
-    "version": "3.0.1"
+    "version": "3.0.1",
+    "source": "private"
   },
   {
     "name": "pf-facebook-cloud-identity-connector",
-    "version": "2.0.1"
+    "version": "2.0.1",
+    "source": "private"
   },
   {
     "name": "pf-apple-cloud-identity-connector",
-    "version": "1.0.1"
+    "version": "1.0.1",
+    "source": "private"
   },
   {
     "name": "pf-iovation-integration-kit",
-    "version": "1.0"
+    "version": "1.0",
+    "source": "private"
   }
 ]

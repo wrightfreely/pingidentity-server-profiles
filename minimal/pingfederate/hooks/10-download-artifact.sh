@@ -10,9 +10,10 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
   ARTIFACT_LIST_JSON=$(cat "${STAGING_DIR}/artifacts/artifact-list.json")
   # Check to see if the source S3 bucket is specified
   if test ! -z "${ARTIFACT_LIST_JSON}"; then
-    if test ! -z "${ARTIFACT_REPO_URL}"; then
+    if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PRIVATE_REPO_URL}"; then
 
-      echo "Downloading from location ${ARTIFACT_REPO_URL}"
+      echo "Downloading from public location  : ${ARTIFACT_REPO_URL}"
+      echo "Downloading from private location : ${PRIVATE_REPO_URL}"
 
       if ! which jq > /dev/null; then
         echo "Installing jq"
@@ -28,7 +29,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         fi
 
         # Install AWS CLI if the upload location is S3
-        if ! test "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}"; then
+        if test ! "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}" -o ! "${PRIVATE_REPO_URL#s3}" == "${PRIVATE_REPO_URL}"; then
           echo "Installing AWS CLI"
           apk --update add python3
           pip3 install --no-cache-dir --upgrade pip
@@ -37,10 +38,18 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
-        if [ -z "${ARTIFACT_REPO_URL##*/pingfederate*}" ] ; then
-          TARGET_BASE_URL="${ARTIFACT_REPO_URL}"
-        else
-          TARGET_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
+        PUBLIC_BASE_URL="${ARTIFACT_REPO_URL}"
+        if test ! -z "${ARTIFACT_REPO_URL}"; then
+          if ! test -z "${ARTIFACT_REPO_URL##*/pingfederate*}"; then
+            PUBLIC_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
+          fi
+        fi
+
+        PRIVATE_BASE_URL="${PRIVATE_REPO_URL}"
+        if test ! -z "${PRIVATE_REPO_URL}"; then
+          if ! test -z "${PRIVATE_REPO_URL##*/pingfederate*}"; then
+            PRIVATE_BASE_URL="${PRIVATE_REPO_URL}/${DIRECTORY_NAME}"
+          fi
         fi
 
         for artifact in $(echo "${ARTIFACT_LIST_JSON}" | jq -c '.[]'); do
@@ -50,6 +59,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
           ARTIFACT_NAME=$(_artifact '.name')
           ARTIFACT_VERSION=$(_artifact '.version')
+          ARTIFACT_SOURCE=$(_artifact '.source')
           ARTIFACT_RUNTIME_ZIP=${ARTIFACT_NAME}-${ARTIFACT_VERSION}-runtime.zip
 
           # Make sure there aren't any duplicate entries for the artifact.
@@ -58,11 +68,20 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
           if test "${ARTIFACT_NAME_COUNT}" == "1"; then
 
-            # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
-            if ! test ${ARTIFACT_REPO_URL#s3} == "${ARTIFACT_REPO_URL}"; then
-              aws s3 cp "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}" /tmp
+            # Get artifact source location
+            if test "${ARTIFACT_VERSION}" == "private"; then
+              ARTIFACT_LOCATION=${PRIVATE_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
             else
-              curl "${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}" --output /tmp/${ARTIFACT_RUNTIME_ZIP}
+              ARTIFACT_LOCATION=${PUBLIC_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
+            fi
+
+            echo "Download Artifact from ${ARTIFACT_LOCATION}"
+
+            # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
+            if ! test ${ARTIFACT_LOCATION#s3} == "${ARTIFACT_LOCATION}"; then
+              aws s3 cp "${ARTIFACT_LOCATION}" /tmp
+            else
+              curl "${ARTIFACT_LOCATION}" --output /tmp/${ARTIFACT_RUNTIME_ZIP}
             fi
 
             if test $(echo $?) == "0"; then
@@ -71,7 +90,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
                   echo Artifact /tmp/${ARTIFACT_RUNTIME_ZIP} could not be unzipped.
               fi
             else
-              echo "Artifact download failed from ${TARGET_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}"
+              echo "Artifact download failed from ${ARTIFACT_LOCATION}"
             fi
 
             #Cleanup
