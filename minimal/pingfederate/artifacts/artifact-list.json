@@ -2,7 +2,12 @@
   {
     "name": "pf-invalid-kit",
     "version": "9.9.9",
-    "source": "private"
+    "source": "public"
+  },
+  {
+    "name": "pf-agentless-integration-kit",
+    "version": "1.5.2",
+    "source": "public"
   },
   {
     "name": "pf-aws-connector",
