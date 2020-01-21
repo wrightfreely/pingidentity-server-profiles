@@ -94,7 +94,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
             fi
 
             # Cleanup
-            if test -f "${DOWNLOAD_DIR}/${ARTIFACT_NAME_WITH_VERSION}"; then
+            if test -f "/tmp/${ARTIFACT_RUNTIME_ZIP}"; then
               rm /tmp/${ARTIFACT_RUNTIME_ZIP}
             fi
           else
