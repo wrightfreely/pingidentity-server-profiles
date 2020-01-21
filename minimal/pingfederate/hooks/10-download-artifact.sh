@@ -12,8 +12,8 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
   if test ! -z "${ARTIFACT_LIST_JSON}"; then
     if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PRIVATE_REPO_URL}"; then
 
-      echo "Downloading from public location  : ${ARTIFACT_REPO_URL}"
-      echo "Downloading from private location : ${PRIVATE_REPO_URL}"
+      echo "Public Repo  : ${ARTIFACT_REPO_URL}"
+      echo "Private Repo : ${PRIVATE_REPO_URL}"
 
       if ! which jq > /dev/null; then
         echo "Installing jq"
@@ -93,8 +93,10 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
               echo "Artifact download failed from ${ARTIFACT_LOCATION}"
             fi
 
-            #Cleanup
-            rm /tmp/${ARTIFACT_RUNTIME_ZIP}
+            # Cleanup
+            if test -f "${DOWNLOAD_DIR}/${ARTIFACT_NAME_WITH_VERSION}"; then
+              rm /tmp/${ARTIFACT_RUNTIME_ZIP}
+            fi
           else
             echo "Artifact ${ARTIFACT_NAME} is specified more than once in ${STAGING_DIR}/artifacts/artifact-list.json"
           fi
@@ -111,7 +113,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         exit 0
       fi
     else
-      echo "Artifacts will not be deployed as the environment variable ARTIFACT_REPO_URL is empty."
+      echo "Artifacts will not be deployed as the environment variable ARTIFACT_REPO_URL and PRIVATE_REPO_URL are empty."
       exit 0
     fi
   else
