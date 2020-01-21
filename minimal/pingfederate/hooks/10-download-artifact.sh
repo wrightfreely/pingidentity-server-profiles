@@ -104,9 +104,10 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
         done
 
-        # Print listed files from deploy
+        # Print listed files from deploy and conf
         ls ${OUT_DIR}/instance/server/default/deploy
         ls ${OUT_DIR}/instance/server/default/conf/template
+        ls ${OUT_DIR}/instance/server/default/conf/language-packs
 
       else
         echo "Artifacts will not be deployed as could not parse ${STAGING_DIR}/artifacts/artifact-list.json."
