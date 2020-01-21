@@ -8,7 +8,7 @@ export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
   # Check to see if the artifact file is empty
   ARTIFACT_LIST_JSON=$(cat "${STAGING_DIR}/artifacts/artifact-list.json")
-  # Check to see if the source S3 bucket is specified
+  # Check to see if the source S3 bucket(s) are specified
   if test ! -z "${ARTIFACT_LIST_JSON}"; then
     if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PRIVATE_REPO_URL}"; then
 
@@ -36,6 +36,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           pip3 install --no-cache-dir --upgrade awscli
         fi
 
+        DOWNLOAD_DIR=$(mktemp -d)
         DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
         PUBLIC_BASE_URL="${ARTIFACT_REPO_URL}"
@@ -79,23 +80,23 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
             # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
             if ! test ${ARTIFACT_LOCATION#s3} == "${ARTIFACT_LOCATION}"; then
-              aws s3 cp "${ARTIFACT_LOCATION}" /tmp
+              aws s3 cp "${ARTIFACT_LOCATION}" ${DOWNLOAD_DIR}
             else
-              curl "${ARTIFACT_LOCATION}" --output /tmp/${ARTIFACT_RUNTIME_ZIP}
+              curl "${ARTIFACT_LOCATION}" --output ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}
             fi
 
             if test $(echo $?) == "0"; then
-              if ! unzip -o /tmp/${ARTIFACT_RUNTIME_ZIP} -d ${OUT_DIR}/instance/server/default
+              if ! unzip -o ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP} -d ${OUT_DIR}/instance/server/default
               then
-                  echo Artifact /tmp/${ARTIFACT_RUNTIME_ZIP} could not be unzipped.
+                  echo Artifact ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP} could not be unzipped.
               fi
             else
               echo "Artifact download failed from ${ARTIFACT_LOCATION}"
             fi
 
             # Cleanup
-            if test -f "/tmp/${ARTIFACT_RUNTIME_ZIP}"; then
-              rm /tmp/${ARTIFACT_RUNTIME_ZIP}
+            if test -f "${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}"; then
+              rm ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}
             fi
           else
             echo "Artifact ${ARTIFACT_NAME} is specified more than once in ${STAGING_DIR}/artifacts/artifact-list.json"
