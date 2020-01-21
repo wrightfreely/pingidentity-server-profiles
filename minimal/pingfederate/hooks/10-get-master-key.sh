@@ -15,7 +15,7 @@ function obfuscatePassword()
    # Ensure Java home is set
    #
    if [ -z "${JAVA_HOME}" ]; then
-      JAVA_HOME=/usr/lib/jvm/default-jvm/jre/
+      export JAVA_HOME=/usr/lib/jvm/default-jvm/jre/
    fi
    #
    # The master key may not exist, this means no key was passed in as a secret and this is the first run of PF 
@@ -36,6 +36,9 @@ function obfuscatePassword()
    #
    mv ldap.properties ldap.properties.subst
    envsubst < ldap.properties.subst > ldap.properties
+   PF_LDAP_PASSWORD_OBFUSCATED="${PF_LDAP_PASSWORD_OBFUSCATED:8}"
+   mv ../server/default/data/pingfederate-ldap-ds.xml ../server/default/data/pingfederate-ldap-ds.xml.subst
+   envsubst < ../server/default/data/pingfederate-ldap-ds.xml.subst > ../server/default/data/pingfederate-ldap-ds.xml
 }   
 
 #---------------------------------------------------------------------------------------------
