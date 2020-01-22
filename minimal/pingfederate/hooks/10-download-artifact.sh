@@ -8,12 +8,12 @@ export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
   # Check to see if the artifact file is empty
   ARTIFACT_LIST_JSON=$(cat "${STAGING_DIR}/artifacts/artifact-list.json")
-  # Check to see if the source S3 bucket(s) are specified
   if test ! -z "${ARTIFACT_LIST_JSON}"; then
-    if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PRIVATE_REPO_URL}"; then
+    # Check to see if the source S3 bucket(s) are specified
+    if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PING_REPO_URL}"; then
 
-      echo "Public Repo  : ${ARTIFACT_REPO_URL}"
-      echo "Private Repo : ${PRIVATE_REPO_URL}"
+      echo "Private Repo : ${ARTIFACT_REPO_URL}"
+      echo "Public Repo  : ${PING_REPO_URL}"
 
       if ! which jq > /dev/null; then
         echo "Installing jq"
@@ -29,7 +29,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         fi
 
         # Install AWS CLI if the upload location is S3
-        if test ! "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}" -o ! "${PRIVATE_REPO_URL#s3}" == "${PRIVATE_REPO_URL}"; then
+        if test ! "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}" -o ! "${PING_REPO_URL#s3}" == "${PING_REPO_URL}"; then
           echo "Installing AWS CLI"
           apk --update add python3
           pip3 install --no-cache-dir --upgrade pip
@@ -39,17 +39,17 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         DOWNLOAD_DIR=$(mktemp -d)
         DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
-        PUBLIC_BASE_URL="${ARTIFACT_REPO_URL}"
-        if test ! -z "${ARTIFACT_REPO_URL}"; then
-          if ! test -z "${ARTIFACT_REPO_URL##*/pingfederate*}"; then
-            PUBLIC_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
+        PUBLIC_BASE_URL="${PING_REPO_URL}"
+        if test ! -z "${PING_REPO_URL}"; then
+          if ! test -z "${PING_REPO_URL##*/pingfederate*}"; then
+            PUBLIC_BASE_URL="${PING_REPO_URL}/${DIRECTORY_NAME}"
           fi
         fi
 
-        PRIVATE_BASE_URL="${PRIVATE_REPO_URL}"
-        if test ! -z "${PRIVATE_REPO_URL}"; then
-          if ! test -z "${PRIVATE_REPO_URL##*/pingfederate*}"; then
-            PRIVATE_BASE_URL="${PRIVATE_REPO_URL}/${DIRECTORY_NAME}"
+        PRIVATE_BASE_URL="${ARTIFACT_REPO_URL}"
+        if test ! -z "${ARTIFACT_REPO_URL}"; then
+          if ! test -z "${ARTIFACT_REPO_URL##*/pingfederate*}"; then
+            PRIVATE_BASE_URL="${ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
           fi
         fi
 
@@ -78,7 +78,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
 
             echo "Download Artifact from ${ARTIFACT_LOCATION}"
 
-            # Use aws command if ARTIFACT_REPO_URL is in s3 format otherwise use curl
+            # Use aws command if ARTIFACT_LOCATION is in s3 format otherwise use curl
             if ! test ${ARTIFACT_LOCATION#s3} == "${ARTIFACT_LOCATION}"; then
               aws s3 cp "${ARTIFACT_LOCATION}" ${DOWNLOAD_DIR}
             else
@@ -119,7 +119,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         exit 0
       fi
     else
-      echo "Artifacts will not be deployed as the environment variable ARTIFACT_REPO_URL and PRIVATE_REPO_URL are empty."
+      echo "Artifacts will not be deployed as the environment variable ARTIFACT_REPO_URL and PING_REPO_URL are empty."
       exit 0
     fi
   else
