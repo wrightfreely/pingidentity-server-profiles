@@ -64,7 +64,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           ARTIFACT_RUNTIME_ZIP=${ARTIFACT_NAME}-${ARTIFACT_VERSION}-runtime.zip
 
           # Check to see if the Artifact Source URL is available
-          if [[ ( "${ARTIFACT_SOURCE}" == "private" ) && ( -z ${ARTIFACT_REPO_URL} ) ]] || [[ ( "${ARTIFACT_SOURCE}" == "public" ) && ( -z ${PING_ARTIFACT_REPO_URL} ) ]]
+          if ( [[ ( "${ARTIFACT_SOURCE}" == "private" ) && ( -z ${ARTIFACT_REPO_URL} ) ]] || [[ ( "${ARTIFACT_SOURCE}" == "public" ) && ( -z ${PING_ARTIFACT_REPO_URL} ) ]] )
           then
             echo "${ARTIFACT_NAME} cannot be deployed as the ${ARTIFACT_SOURCE} source repo is not defined. "
           else
