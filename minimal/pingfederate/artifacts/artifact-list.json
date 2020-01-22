@@ -1,10 +1,5 @@
 [
   {
-    "name": "pf-stub-plugins",
-    "version": "1.0.0",
-    "source": "private"
-  },
-  {
     "name": "pf-agentless-integration-kit",
     "version": "1.5.2",
     "source": "private"
