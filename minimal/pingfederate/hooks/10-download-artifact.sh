@@ -10,10 +10,10 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
   ARTIFACT_LIST_JSON=$(cat "${STAGING_DIR}/artifacts/artifact-list.json")
   if test ! -z "${ARTIFACT_LIST_JSON}"; then
     # Check to see if the source S3 bucket(s) are specified
-    if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PING_REPO_URL}"; then
+    if test ! -z "${ARTIFACT_REPO_URL}" -o ! -z "${PING_ARTIFACT_REPO_URL}"; then
 
       echo "Private Repo : ${ARTIFACT_REPO_URL}"
-      echo "Public Repo  : ${PING_REPO_URL}"
+      echo "Public Repo  : ${PING_ARTIFACT_REPO_URL}"
 
       if ! which jq > /dev/null; then
         echo "Installing jq"
@@ -29,7 +29,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         fi
 
         # Install AWS CLI if the upload location is S3
-        if test ! "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}" -o ! "${PING_REPO_URL#s3}" == "${PING_REPO_URL}"; then
+        if test ! "${ARTIFACT_REPO_URL#s3}" == "${ARTIFACT_REPO_URL}" -o ! "${PING_ARTIFACT_REPO_URL#s3}" == "${PING_ARTIFACT_REPO_URL}"; then
           echo "Installing AWS CLI"
           apk --update add python3
           pip3 install --no-cache-dir --upgrade pip
@@ -39,10 +39,10 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         DOWNLOAD_DIR=$(mktemp -d)
         DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
-        PUBLIC_BASE_URL="${PING_REPO_URL}"
-        if test ! -z "${PING_REPO_URL}"; then
-          if ! test -z "${PING_REPO_URL##*/pingfederate*}"; then
-            PUBLIC_BASE_URL="${PING_REPO_URL}/${DIRECTORY_NAME}"
+        PUBLIC_BASE_URL="${PING_ARTIFACT_REPO_URL}"
+        if test ! -z "${PING_ARTIFACT_REPO_URL}"; then
+          if ! test -z "${PING_ARTIFACT_REPO_URL##*/pingfederate*}"; then
+            PUBLIC_BASE_URL="${PING_ARTIFACT_REPO_URL}/${DIRECTORY_NAME}"
           fi
         fi
 
@@ -119,7 +119,7 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
         exit 0
       fi
     else
-      echo "Artifacts will not be deployed as the environment variable ARTIFACT_REPO_URL and PING_REPO_URL are empty."
+      echo "Artifacts will not be deployed as the environment variable ARTIFACT_REPO_URL and PING_ARTIFACT_REPO_URL are empty."
       exit 0
     fi
   else
