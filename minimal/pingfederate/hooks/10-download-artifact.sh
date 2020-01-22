@@ -63,39 +63,45 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
           ARTIFACT_SOURCE=$(_artifact '.source')
           ARTIFACT_RUNTIME_ZIP=${ARTIFACT_NAME}-${ARTIFACT_VERSION}-runtime.zip
 
-          # Make sure there aren't any duplicate entries for the artifact.
-          # This is needed to avoid issues with multiple plugin versions
-          ARTIFACT_NAME_COUNT=$(echo "${ARTIFACT_LIST_JSON}" | grep -iEo "${ARTIFACT_NAME}" | wc -l | xargs)
+          # Check to see if the Artifact Source URL is available
+          if [[ ( "${ARTIFACT_SOURCE}" == "private" ) && ( -z ${ARTIFACT_REPO_URL} ) ]] || [[ ( "${ARTIFACT_SOURCE}" == "public" ) && ( -z ${PING_ARTIFACT_REPO_URL} ) ]]
+          then
+            echo "${ARTIFACT_NAME} cannot be deployed as the ${ARTIFACT_SOURCE} source repo is not defined. "
+          else
+            # Make sure there aren't any duplicate entries for the artifact.
+            # This is needed to avoid issues with multiple plugin versions
+            ARTIFACT_NAME_COUNT=$(echo "${ARTIFACT_LIST_JSON}" | grep -iEo "${ARTIFACT_NAME}" | wc -l | xargs)
 
-          if test "${ARTIFACT_NAME_COUNT}" == "1"; then
+            if test "${ARTIFACT_NAME_COUNT}" == "1"; then
 
-            # Get artifact source location
-            if test "${ARTIFACT_SOURCE}" == "private"; then
-              ARTIFACT_LOCATION=${PRIVATE_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
-            else
-              ARTIFACT_LOCATION=${PUBLIC_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
-            fi
-
-            echo "Download Artifact from ${ARTIFACT_LOCATION}"
-
-            # Use aws command if ARTIFACT_LOCATION is in s3 format otherwise use curl
-            if ! test ${ARTIFACT_LOCATION#s3} == "${ARTIFACT_LOCATION}"; then
-              aws s3 cp "${ARTIFACT_LOCATION}" ${DOWNLOAD_DIR}
-            else
-              curl "${ARTIFACT_LOCATION}" --output ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}
-            fi
-
-            if test $(echo $?) == "0"; then
-              if ! unzip -o ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP} "deploy/*" -d ${OUT_DIR}/instance/server/default
-              then
-                  echo Artifact ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}/deploy could not be unzipped.
+              # Get artifact source location
+              if test "${ARTIFACT_SOURCE}" == "private"; then
+                ARTIFACT_LOCATION=${PRIVATE_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
+              else
+                ARTIFACT_LOCATION=${PUBLIC_BASE_URL}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_RUNTIME_ZIP}
               fi
-               if ! unzip -o ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP} "conf/*" -d ${OUT_DIR}/instance/server/default
-              then
-                  echo Artifact ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}/conf could not be unzipped.
+
+              echo "Download Artifact from ${ARTIFACT_LOCATION}"
+
+              # Use aws command if ARTIFACT_LOCATION is in s3 format otherwise use curl
+              if ! test ${ARTIFACT_LOCATION#s3} == "${ARTIFACT_LOCATION}"; then
+                aws s3 cp "${ARTIFACT_LOCATION}" ${DOWNLOAD_DIR}
+              else
+                curl "${ARTIFACT_LOCATION}" --output ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}
               fi
-            else
-              echo "Artifact download failed from ${ARTIFACT_LOCATION}"
+
+              if test $(echo $?) == "0"; then
+                if ! unzip -o ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP} "deploy/*" -d ${OUT_DIR}/instance/server/default
+                then
+                    echo Artifact ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}/deploy could not be unzipped.
+                fi
+                 if ! unzip -o ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP} "conf/*" -d ${OUT_DIR}/instance/server/default
+                then
+                    echo Artifact ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}/conf could not be unzipped.
+                fi
+              else
+                echo "Artifact download failed from ${ARTIFACT_LOCATION}"
+              fi
             fi
 
             # Cleanup
