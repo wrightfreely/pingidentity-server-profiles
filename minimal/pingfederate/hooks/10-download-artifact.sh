@@ -101,16 +101,15 @@ if test -f "${STAGING_DIR}/artifacts/artifact-list.json"; then
               else
                 echo "Artifact download failed from ${ARTIFACT_LOCATION}"
               fi
-            fi
 
-            # Cleanup
-            if test -f "${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}"; then
-              rm ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}
+              # Cleanup
+              if test -f "${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}"; then
+                rm ${DOWNLOAD_DIR}/${ARTIFACT_RUNTIME_ZIP}
+              fi
+            else
+              echo "Artifact ${ARTIFACT_NAME} is specified more than once in ${STAGING_DIR}/artifacts/artifact-list.json"
             fi
-          else
-            echo "Artifact ${ARTIFACT_NAME} is specified more than once in ${STAGING_DIR}/artifacts/artifact-list.json"
           fi
-
 
         done
 
