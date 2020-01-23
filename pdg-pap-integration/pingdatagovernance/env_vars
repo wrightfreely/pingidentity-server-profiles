@@ -31,3 +31,5 @@ MAX_HEAP_SIZE=1g
 
 # The shared secret used for PAP with PDG
 DECISION_POINT_SHARED_SECRET=2FederateM0re
+
+PAP_HTTPS_PORT=8443

@@ -5,7 +5,7 @@ dsconfig set-trust-manager-provider-prop \
 dsconfig create-external-server \
 	--server-name pingdatagovernancepap \
 	--type policy \
-	--set base-url:https://pingdatagovernancepap:8443 \
+	--set base-url:https://pingdatagovernancepap:${PAP_HTTPS_PORT} \
 	--set hostname-verification-method:allow-all \
 	--set key-manager-provider:Null \
 	--set "trust-manager-provider:Blind Trust" \
