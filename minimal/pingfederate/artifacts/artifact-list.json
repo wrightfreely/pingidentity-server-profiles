@@ -1,13 +1,7 @@
 [
   {
-    "name": "pf-stub-plugins",
-    "version": "1.0.0",
-    "source": "private"
-  },
-  {
     "name": "pf-agentless-integration-kit",
-    "version": "1.5.2",
-    "source": "private"
+    "version": "1.5.2"
   },
   {
     "name": "pf-aws-connector",
@@ -47,11 +41,6 @@
   {
     "name": "pf-github-cloud-identity-connector",
     "version": "1.0",
-    "source": "private"
-  },
-  {
-    "name": "pf-atlassian-integration-kit",
-    "version": "2.1",
     "source": "private"
   },
   {
