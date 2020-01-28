@@ -5,4 +5,7 @@
     </con:map>
     <con:item name="bearer-access-token-management-plugins-default">jwt</con:item>
     <con:map name="bearer-access-token-management-plugins-parents"/>
+    <con:map name="bearer-access-token-management-plugin-sequence">
+        <con:item name="jwt">1</con:item>
+    </con:map>
 </con:config>
